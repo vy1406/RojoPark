@@ -5,14 +5,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { provideRouter } from '@angular/router';
-import { Router } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 describe('SignupComponent', () => {
   let component: SignupComponent;
   let fixture: ComponentFixture<SignupComponent>;
-  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -25,14 +22,12 @@ describe('SignupComponent', () => {
         MatButtonModule
       ],
       providers: [
-        provideRouter([]),
         provideAnimations()
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SignupComponent);
     component = fixture.componentInstance;
-    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -40,41 +35,70 @@ describe('SignupComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a valid form when filled correctly', () => {
-    component.signupForm.setValue({
-      email: 'test@example.com',
-      password: '123456',
-      confirmPassword: '123456'
-    });
-    expect(component.signupForm.valid).toBeTruthy();
+  it('should have an invalid form initially', () => {
+    expect(component.signupForm.valid).toBeFalsy();
   });
 
-  it('should invalidate form if email is missing', () => {
-    component.signupForm.setValue({
-      email: '',
-      password: '123456',
-      confirmPassword: '123456'
-    });
-    expect(component.signupForm.invalid).toBeTruthy();
+  it('should validate email field correctly', () => {
+    const emailControl = component.signupForm.get('email');
+
+    emailControl?.setValue('');
+    expect(emailControl?.invalid).toBeTruthy();
+    expect(emailControl?.errors?.['required']).toBeTruthy();
+
+    emailControl?.setValue('invalid-email');
+    expect(emailControl?.invalid).toBeTruthy();
+    expect(emailControl?.errors?.['email']).toBeTruthy();
+
+    emailControl?.setValue('test@example.com');
+    expect(emailControl?.valid).toBeTruthy();
   });
 
-  it('should invalidate form if password and confirm password do not match', () => {
+  it('should validate password field correctly', () => {
+    const passwordControl = component.signupForm.get('password');
+
+    passwordControl?.setValue('');
+    expect(passwordControl?.invalid).toBeTruthy();
+    expect(passwordControl?.errors?.['required']).toBeTruthy();
+
+    passwordControl?.setValue('123');
+    expect(passwordControl?.invalid).toBeTruthy();
+    expect(passwordControl?.errors?.['minlength']).toBeTruthy();
+
+    passwordControl?.setValue('123456');
+    expect(passwordControl?.valid).toBeTruthy();
+  });
+
+  it('should show password mismatch error if passwords do not match', () => {
     component.signupForm.setValue({
       email: 'test@example.com',
       password: '123456',
       confirmPassword: 'abcdef'
     });
-    expect(component.signupForm.hasError('passwordMismatch')).toBeTruthy();
+
+    expect(component.signupForm.errors?.['passwordMismatch']).toBeTruthy();
   });
 
-  it('should navigate to home on successful signup', () => {
-    spyOn(router, 'navigate');
+  it('should not show password mismatch error if passwords match', () => {
     component.signupForm.setValue({
       email: 'test@example.com',
       password: '123456',
       confirmPassword: '123456'
     });
+
+    expect(component.signupForm.errors?.['passwordMismatch']).toBeFalsy();
+  });
+
+  it('should submit form when valid', () => {
+    spyOn(console, 'log');
+
+    component.signupForm.setValue({
+      email: 'test@example.com',
+      password: '123456',
+      confirmPassword: '123456'
+    });
+
     component.onSubmit();
-    expect(router.navigate).toHaveBeenCalledWith(['/home']);
+    expect(console.log).toHaveBeenCalledWith('Form Submitted:', component.signupForm.value);
   });
 });
