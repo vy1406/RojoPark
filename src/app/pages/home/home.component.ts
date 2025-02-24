@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { Park, ParkService } from '../../servicers/parks.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -23,28 +24,31 @@ import { Park, ParkService } from '../../servicers/parks.service';
 })
 export class HomeComponent {
   private parkService = inject(ParkService);
-  parks$ = this.parkService.parks$;
-  isLoading$ = this.parkService.loading$;
+
+  parks = signal<Park[]>([]);
+  search = signal('');
   selectedParkId = signal<number | null>(null);
 
-  users = signal<Park[]>([]);
-  search = signal('');
   loading = this.parkService.loading$;
 
-  filteredUsers = computed(() =>
-    this.users().filter(user =>
+  fetchParks = computed(() =>
+    this.parks().filter(user =>
       user.name.toLowerCase().includes(this.search().toLowerCase())
     )
   );
 
-  constructor(private userService: ParkService) { }
+  constructor(private userService: ParkService, private router: Router) { }
 
   ngOnInit() {
-    this.userService.parks$.subscribe(users => this.users.set(users));
+    this.userService.parks$.subscribe(parks => this.parks.set(parks));
     this.userService.fetchUsers();
   }
 
   trackById(index: number, park: Park) {
     return park.id;
+  }
+
+  navigateToPark() {
+    this.router.navigate(['/parks', this.selectedParkId()]);
   }
 }

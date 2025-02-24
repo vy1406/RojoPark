@@ -1,29 +1,25 @@
 <mat-card>
-    <div>
+    <!-- <div>
         <input type="text" placeholder="Search users..." [(ngModel)]="search" />
-        <div *ngIf="loading | async">Loading...</div>
-        <ul>
-            <li *ngFor="let park of filteredUsers(); trackBy : trackById ">{{ park.name }} - {{ park.location }}</li>
-        </ul>
-    </div>
-    <!-- <mat-card-title>Select a Park</mat-card-title>
+    </div> -->
+    <mat-card-title>Select a Park</mat-card-title>
     <mat-card-content>
 
-        <div *ngIf="isLoading$ | async" class="loader">Loading parks...</div>
+        <div *ngIf="loading | async" class="loader">Loading parks...</div>
 
-        <mat-form-field appearance="fill" class="full-width" *ngIf="!(isLoading$ | async)">
+        <mat-form-field appearance="fill" class="full-width" *ngIf="!(loading | async)">
             <mat-label>Choose a park</mat-label>
             <mat-select [(ngModel)]="selectedParkId">
-                <mat-option *ngFor="let park of (parks$ | async)" [value]="park.id">
-                    {{ park.name }}
+                <mat-option *ngFor="let park of fetchParks(); trackBy : trackById" [value]="park.id">
+                    {{ park.name }} - {{ park.location }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
         <button mat-raised-button color="primary" (click)="navigateToPark()"
-            [disabled]="!selectedParkId || (isLoading$ | async)">
+            [disabled]="!selectedParkId || (loading | async)">
             Visit Park
         </button>
 
-    </mat-card-content> -->
+    </mat-card-content>
 </mat-card>
