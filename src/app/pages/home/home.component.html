@@ -1,1 +1,16 @@
-<p>home works!</p>
+<mat-card>
+    <mat-card-title>Select a Park</mat-card-title>
+    <mat-card-content>
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Choose a park</mat-label>
+            <mat-select [(ngModel)]="selectedParkId">
+                <mat-option *ngFor="let park of parks" [value]="park.id">
+                    {{ park.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="onNavigateToPark()" [disabled]="!selectedParkId">
+            Visit Park
+        </button>
+    </mat-card-content>
+</mat-card>
