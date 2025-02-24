@@ -21,7 +21,7 @@ export class ParkService {
 
   constructor(private http: HttpClient) { }
 
-  fetchUsers() {
+  fetchParks() {
     this.loadingSubject.next(true);
     setTimeout(() => {
       this.http.get<Park[]>(this.url)

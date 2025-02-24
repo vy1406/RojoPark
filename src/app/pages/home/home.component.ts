@@ -24,12 +24,18 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent {
   private parkService = inject(ParkService);
-
+  private router = inject(Router);
   parks = signal<Park[]>([]);
   search = signal('');
   selectedParkId = signal<number | null>(null);
 
   loading = this.parkService.loading$;
+
+  constructor() {
+    effect(() => {
+      this.parkService.parks$.subscribe(parks => this.parks.set(parks));
+    });
+  }
 
   fetchParks = computed(() =>
     this.parks().filter(user =>
@@ -37,12 +43,10 @@ export class HomeComponent {
     )
   );
 
-  constructor(private userService: ParkService, private router: Router) { }
-
   ngOnInit() {
-    this.userService.parks$.subscribe(parks => this.parks.set(parks));
-    this.userService.fetchUsers();
+    this.parkService.fetchParks();
   }
+
 
   trackById(index: number, park: Park) {
     return park.id;
