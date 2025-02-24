@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, tap } from 'rxjs';
+import { BehaviorSubject, delay, map, tap } from 'rxjs';
 
 export interface Park {
-  id: number;
+  id: string;
   name: string;
   location: string;
 }
@@ -22,14 +22,20 @@ export class ParkService {
 
   fetchParks() {
     this.loadingSubject.next(true);
-    setTimeout(() => {
-      this.http.get<Park[]>(this.url)
-        .pipe(
-          tap(parks => {
-            this.parksSubject.next(parks);
-            this.loadingSubject.next(false);
-          })
-        ).subscribe();
-    }, 2000);
+    this.http.get<Park[]>(this.url)
+      .pipe(
+        delay(2000),
+        tap(parks => {
+          this.parksSubject.next(parks);
+          this.loadingSubject.next(false);
+        })
+      ).subscribe();
+  }
+
+  fetchById(id: string) {
+
+    return this.http.get<Park>(`${this.url}/${id}`).pipe(
+      delay(2000))
+
   }
 }
