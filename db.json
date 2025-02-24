@@ -1,0 +1,8 @@
+{
+    "parks": [
+      { "id": 1, "name": "Green Park", "location": "North" },
+      { "id": 2, "name": "Blue Park", "location": "South" },
+      { "id": 3, "name": "Yellow Park", "location": "West" }
+    ]
+  }
+  

@@ -11,8 +11,7 @@ export interface Park {
   providedIn: 'root'
 })
 export class ParkService {
-  private readonly url = 'https://jsonplaceholder.typicode.com/users'
-  private randomLocations = ['North Park', 'South Valley', 'East Meadow', 'West Hills', 'Central Park', 'Downtown Park', 'Uptown']
+  private readonly url = 'http://localhost:3000/parks'
   private parksSubject = new BehaviorSubject<Park[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
@@ -26,11 +25,6 @@ export class ParkService {
     setTimeout(() => {
       this.http.get<Park[]>(this.url)
         .pipe(
-          map(parks => parks.map(user => ({
-            id: user.id,
-            name: user.name,
-            location: this.randomLocations[Math.floor(Math.random() * this.randomLocations.length)]
-          }))),
           tap(parks => {
             this.parksSubject.next(parks);
             this.loadingSubject.next(false);
