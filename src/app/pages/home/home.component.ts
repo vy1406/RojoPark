@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { Router } from '@angular/router';
+import { Park, ParkService } from '../../servicers/parks.service';
 
 @Component({
   selector: 'app-home',
@@ -18,27 +18,29 @@ import { Router } from '@angular/router';
     MatSelectModule,
     MatButtonModule
   ],
-
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
+  private parkService = inject(ParkService);
+  parks$ = this.parkService.parks$;
+  isLoading$ = this.parkService.loading$;
+  selectedParkId = signal<number | null>(null);
 
-  parks = [
-    { id: 1, name: 'Banff National Park' },
-    { id: 2, name: 'Jasper National Park' },
-    { id: 3, name: 'Yoho National Park' },
-    { id: 4, name: 'Waterton Lakes National Park' }
-  ]
+  users = signal<Park[]>([]);
+  search = signal('');
+  loading = this.parkService.loading$;
 
-  selectedParkId: number | null = null;
+  filteredUsers = computed(() =>
+    this.users().filter(user =>
+      user.name.toLowerCase().includes(this.search().toLowerCase())
+    )
+  );
 
-  constructor(private route: Router) { }
+  constructor(private userService: ParkService) { }
 
-  onNavigateToPark() {
-    if (this.selectedParkId) {
-      console.log(`Navigating to park with id: ${this.selectedParkId}`);
-      this.route.navigate([`/parks/${this.selectedParkId}`]);
-    }
+  ngOnInit() {
+    this.userService.parks$.subscribe(users => this.users.set(users));
+    this.userService.fetchUsers();
   }
 }
