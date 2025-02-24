@@ -1,0 +1,28 @@
+.main {
+    padding-top: 50px;
+}
+
+.sidenav-container {
+    height: 100vh;
+  }
+  
+  .sidenav {
+    width: 250px;
+  }
+  
+  .sidenav mat-nav-list {
+    padding-top: 20px;
+  }
+  
+  .menu-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    background-color: white;
+  }
+  
+  .main-content {
+    padding: 16px;
+  }
+  
