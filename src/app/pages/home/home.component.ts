@@ -43,4 +43,8 @@ export class HomeComponent {
     this.userService.parks$.subscribe(users => this.users.set(users));
     this.userService.fetchUsers();
   }
+
+  trackById(index: number, park: Park) {
+    return park.id;
+  }
 }

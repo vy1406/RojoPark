@@ -3,7 +3,7 @@
         <input type="text" placeholder="Search users..." [(ngModel)]="search" />
         <div *ngIf="loading | async">Loading...</div>
         <ul>
-            <li *ngFor="let user of filteredUsers()">{{ user.name }}</li>
+            <li *ngFor="let park of filteredUsers(); trackBy : trackById ">{{ park.name }} - {{ park.location }}</li>
         </ul>
     </div>
     <!-- <mat-card-title>Select a Park</mat-card-title>
