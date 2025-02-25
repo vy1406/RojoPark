@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { Post } from '../../servicers/posts.service';
 
 @Component({
-  selector: 'app-post',
+  selector: 'app-post-item',
   standalone: true,
   imports: [
     MatCardModule,

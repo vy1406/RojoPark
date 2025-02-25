@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ParkService, Park } from '../../servicers/parks.service';
 import { BehaviorSubject } from 'rxjs';
 import { Post, PostService } from '../../servicers/posts.service';
-import { PostComponent } from '../../components/post/post.component';
+import { PostComponent } from '../../components/post-item/post.component';
 
 @Component({
   selector: 'app-park',

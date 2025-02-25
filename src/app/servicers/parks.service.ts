@@ -33,7 +33,6 @@ export class ParkService {
   }
 
   fetchById(id: string) {
-
     return this.http.get<Park>(`${this.url}/${id}`).pipe(
       delay(2000))
   }

@@ -12,7 +12,11 @@
       {
         "id": "1",
         "title": "First Post",
-        "parkId": "1",
+        "park": {
+          "id": "1",
+          "name": "Blue Park",
+          "location": "South"
+        },
         "dateCreated": "2020-01-01",
         "thumbnailSmall": "https://media.istockphoto.com/id/1832921325/photo/husky-in-the-garden.jpg?s=2048x2048&w=is&k=20&c=Cw5_Ur-pn59RdfFbKVgBOAWz_Jtr7EfGkL-EjtptgII=",
         "thumbnailLarge": "https://media.istockphoto.com/id/1832921325/photo/husky-in-the-garden.jpg?s=2048x2048&w=is&k=20&c=Cw5_Ur-pn59RdfFbKVgBOAWz_Jtr7EfGkL-EjtptgII=",
@@ -38,7 +42,11 @@
       {
         "id": "2",
         "title": "Second Post",
-        "parkId": "2",
+        "park": {
+          "id": "2",
+          "name": "Blue Park",
+          "location": "South"
+        },
         "dateCreated": "2020-01-01",
         "thumbnailSmall": "https://media.istockphoto.com/id/1832921325/photo/husky-in-the-garden.jpg?s=2048x2048&w=is&k=20&c=Cw5_Ur-pn59RdfFbKVgBOAWz_Jtr7EfGkL-EjtptgII=",
         "thumbnailLarge": "https://media.istockphoto.com/id/1832921325/photo/husky-in-the-garden.jpg?s=2048x2048&w=is&k=20&c=Cw5_Ur-pn59RdfFbKVgBOAWz_Jtr7EfGkL-EjtptgII=",
@@ -61,7 +69,15 @@
           }
         ]
       },
-      { "id": "3", "title": "First post park 2",  "parkId": "2",  "content": "Hello Again", "userId": "2" }
+      {
+        "id": "3",
+        "title": "First post park 2",
+        "park": {
+          "id": "2",
+          "name": "Blue Park",
+          "location": "South"
+        }, 
+        "content": "Hello Again", "userId": "2" }
     ]
   }
 
