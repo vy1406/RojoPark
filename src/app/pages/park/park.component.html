@@ -9,6 +9,6 @@
     </mat-card-content>
 </mat-card>
 
-<div *ngFor="let post of parkPosts">
+<div *ngFor="let post of parkPosts(); trackBy: trackByPostId">
     <app-post [post]="post"></app-post>
 </div>

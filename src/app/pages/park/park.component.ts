@@ -26,18 +26,31 @@ export class ParkComponent implements OnInit {
 
   parkId: string | null = null;
   park: Park | null = null;
-  parkPosts: Post[] = [];
   loading$ = new BehaviorSubject<boolean>(false);
 
-  ngOnInit() {
-    this.parkId = this.route.snapshot.paramMap.get('id');
+  parkPosts = this.postService.parkPosts;
+  loading = this.postService.loading;
 
-    if (this.parkId) {
-      this.parkService.fetchById(this.parkId).subscribe({
-        next: (park) => this.park = park
-      });
-      this.postService.fetchByParkId(this.parkId);
-      this.postService.parkPosts$.subscribe(posts => this.parkPosts = posts);
-    }
+  constructor() {
+    console.log('ParkComponent created');
+  }
+
+  ngOnInit() {
+    console.log('ParkComponent initialized');
+    this.route.paramMap.subscribe(params => {
+      this.parkId = params.get('id');
+
+      if (this.parkId) {
+        this.parkService.fetchById(this.parkId).subscribe({
+          next: (park) => this.park = park
+        });
+
+        this.postService.fetchByParkId(this.parkId);
+      }
+    });
+  }
+
+  trackByPostId(index: number, post: Post) {
+    return post.id;
   }
 }

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, delay, map, tap } from 'rxjs';
 
 export interface User {
@@ -34,12 +34,13 @@ export class PostService {
   private readonly url = 'http://localhost:3000/posts'
 
   private allPostSubject = new BehaviorSubject<Post[]>([]);
-  private parkPostsSubject = new BehaviorSubject<Post[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
   allPosts$ = this.allPostSubject.asObservable();
-  parkPosts$ = this.parkPostsSubject.asObservable();
   loading$ = this.loadingSubject.asObservable();
+
+  parkPosts = signal<Post[]>([]);
+  loading = signal<boolean>(false);
 
   constructor(private http: HttpClient) { }
 
@@ -61,14 +62,13 @@ export class PostService {
   }
 
   fetchByParkId(parkId: string) {
-    this.loadingSubject.next(true);
+    this.loading.set(true);
     this.http.get<Post[]>(`${this.url}?parkId=${parkId}`)
       .pipe(
         delay(2000),
-        tap(parkPosts => {
-          console.log('Fetched posts for park:', parkPosts);
-          this.parkPostsSubject.next(parkPosts);
-          this.loadingSubject.next(false);
+        tap(posts => {
+          this.parkPosts.set(posts);
+          this.loading.set(false);
         })
       )
       .subscribe();
