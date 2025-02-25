@@ -15,6 +15,7 @@ const MOCK_USER: User = { id: '1', username: 'bob' };
 
 @Component({
   selector: 'app-post-form',
+  standalone: true,
   imports: [
     CommonModule,
     MatCardModule,
