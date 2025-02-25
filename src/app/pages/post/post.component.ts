@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, inject, Input, OnChanges, OnInit, PLATFORM_ID, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { PostService } from '../../servicers/posts.service';
-import { ActivatedRoute } from '@angular/router';
+import { Post } from '../../servicers/posts.service';
 
 @Component({
   selector: 'app-post',
+  standalone: true,
   imports: [
     MatCardModule,
     CommonModule
@@ -13,13 +13,13 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
 })
-export class PostComponent implements OnInit {
-  private postService = inject(PostService);
-  private route = inject(ActivatedRoute);
+export class PostComponent implements OnChanges {
+  @Input() post!: Post;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['post'] && changes['post'].currentValue) {
+      console.log('Post updated:', this.post);
+    }
   }
 
 }

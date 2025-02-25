@@ -65,8 +65,9 @@ export class PostService {
     this.http.get<Post[]>(`${this.url}?parkId=${parkId}`)
       .pipe(
         delay(2000),
-        tap(posts => {
-          this.parkPostsSubject.next(posts);
+        tap(parkPosts => {
+          console.log('Fetched posts for park:', parkPosts);
+          this.parkPostsSubject.next(parkPosts);
           this.loadingSubject.next(false);
         })
       )

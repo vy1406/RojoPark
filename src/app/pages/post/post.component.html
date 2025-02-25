@@ -1,1 +1,7 @@
-<p>post works!</p>
+<mat-card *ngIf="post">
+    <mat-card-title>{{ post.title }}</mat-card-title>
+    <img *ngIf="post.thumbnailSmall" [src]="post.thumbnailSmall" alt="Post Image" />
+    <mat-card-content>
+        <p>{{ post.content }}</p>
+    </mat-card-content>
+</mat-card>

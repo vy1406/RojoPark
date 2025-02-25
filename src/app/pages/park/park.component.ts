@@ -5,12 +5,14 @@ import { CommonModule } from '@angular/common';
 import { ParkService, Park } from '../../servicers/parks.service';
 import { BehaviorSubject } from 'rxjs';
 import { Post, PostService } from '../../servicers/posts.service';
+import { PostComponent } from '../post/post.component';
 
 @Component({
   selector: 'app-park',
   imports: [
     MatCardModule,
-    CommonModule
+    CommonModule,
+    PostComponent
   ],
   standalone: true,
   templateUrl: './park.component.html',
