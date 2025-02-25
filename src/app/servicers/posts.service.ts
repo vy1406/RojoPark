@@ -32,10 +32,13 @@ export interface Post {
 })
 export class PostService {
   private readonly url = 'http://localhost:3000/posts'
-  private postSubject = new BehaviorSubject<Post[]>([]);
+
+  private allPostSubject = new BehaviorSubject<Post[]>([]);
+  private parkPostsSubject = new BehaviorSubject<Post[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
-  posts$ = this.postSubject.asObservable();
+  allPosts$ = this.allPostSubject.asObservable();
+  parkPosts$ = this.parkPostsSubject.asObservable();
   loading$ = this.loadingSubject.asObservable();
 
   constructor(private http: HttpClient) { }
@@ -46,7 +49,7 @@ export class PostService {
       .pipe(
         delay(2000),
         tap(posts => {
-          this.postSubject.next(posts);
+          this.allPostSubject.next(posts);
           this.loadingSubject.next(false);
         })
       )
@@ -63,7 +66,7 @@ export class PostService {
       .pipe(
         delay(2000),
         tap(posts => {
-          this.postSubject.next(posts);
+          this.parkPostsSubject.next(posts);
           this.loadingSubject.next(false);
         })
       )
