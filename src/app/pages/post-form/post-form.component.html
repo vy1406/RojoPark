@@ -10,7 +10,7 @@
 
             <mat-form-field appearance="fill" class="full-width">
                 <mat-label>Content</mat-label>
-                <textarea matInput formControlName="content" rows="3"></textarea>
+                <textarea matInput formControlName="content"></textarea>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="full-width">
@@ -20,7 +20,7 @@
 
             <mat-form-field appearance="fill" class="full-width">
                 <mat-label>Moderator</mat-label>
-                <input matInput [value]="username" disabled="">
+                <input matInput [value]="username" disabled>
             </mat-form-field>
 
             <mat-form-field appearance="fill" class="full-width">
@@ -31,18 +31,20 @@
             <div>
                 <label>Thumbnail:</label>
                 <input type="file" (change)="onThumbnailSelected($event)" accept="image/*">
-                <div *ngIf="thumbnailFile">Selected: {{ thumbnailFile.name }}</div>
+                <div *ngIf="thumbnailPreview">
+                    <p>Thumbnail Preview:</p>
+                    <img [src]="thumbnailPreview" class="thumbnail-preview">
+                </div>
             </div>
 
-            <!-- Attachments Upload -->
             <div>
                 <label>Attachments (Max: 5MB each)</label>
                 <input type="file" (change)="onAttachmentsSelected($event)" multiple accept="image/*,application/pdf">
-                <div *ngIf="attachments.length">
-                    Selected:
-                    <ul>
-                        <li *ngFor="let file of attachments">{{ file.name }}</li>
-                    </ul>
+                <div *ngIf="attachmentPreviews.length">
+                    <p>Attachments Preview:</p>
+                    <div class="attachments-container">
+                        <img *ngFor="let preview of attachmentPreviews" [src]="preview" class="attachment-preview">
+                    </div>
                 </div>
             </div>
 

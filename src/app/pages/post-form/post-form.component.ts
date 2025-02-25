@@ -11,7 +11,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { DateFormatPipe } from '../../pipes/date.format.pipe';
 
-const MOCK_USER: User = { "id": "1", "username": "bob" }
+const MOCK_USER: User = { id: '1', username: 'bob' };
+
 @Component({
   selector: 'app-post-form',
   imports: [
@@ -24,7 +25,7 @@ const MOCK_USER: User = { "id": "1", "username": "bob" }
     ReactiveFormsModule,
   ],
   templateUrl: './post-form.component.html',
-  styleUrl: './post-form.component.scss'
+  styleUrl: './post-form.component.scss',
 })
 export class PostFormComponent {
   private parkService = inject(ParkService);
@@ -34,14 +35,22 @@ export class PostFormComponent {
   postForm!: FormGroup;
   park$!: Observable<Park>;
   selectedPark: Park | null = null;
-
   moderator: User = MOCK_USER;
 
   thumbnailFile: File | null = null;
+  thumbnailPreview: string | null = null;
+
   attachments: File[] = [];
+  attachmentPreviews: string[] = [];
 
   constructor() {
-    this.initForm();
+    this.postForm = this.fb.group({
+      title: ['', [Validators.required]],
+      content: ['', [Validators.required]],
+      dateCreated: [this.formatDateForDynamoDB()],
+      park: [null],
+      moderator: [this.moderator],
+    });
   }
 
   ngOnInit() {
@@ -59,26 +68,20 @@ export class PostFormComponent {
       }
     });
   }
-  private initForm() {
-    this.postForm = this.fb.group({
-      title: ['', [Validators.required]],
-      content: ['', [Validators.required]],
-      dateCreated: [this.formatDateForDynamoDB()],
-      park: [null],
-      moderator: [this.moderator]
-    });
-  }
 
   private formatDateForDynamoDB(): string {
-    return new Date().toISOString()
+    return new Date().toISOString();
   }
-
 
   onThumbnailSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
       this.thumbnailFile = file;
-      console.log('Thumbnail selected:', file.name);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.thumbnailPreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -86,20 +89,38 @@ export class PostFormComponent {
     const files: FileList = event.target.files;
     if (files) {
       this.attachments = Array.from(files);
+      this.attachmentPreviews = [];
+
+      this.attachments.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.attachmentPreviews.push(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+      });
+
       console.log('Attachments selected:', this.attachments.map(f => f.name));
     }
   }
 
   onSubmit() {
     if (this.postForm.valid) {
-      const newPost: Post = this.postForm.value;
+      const newPost: Post = {
+        ...this.postForm.value,
+        thumbnailSmall: this.thumbnailFile?.name || null,
+        attachments: this.attachments.map(f => f.name),
+      };
       console.log('Submitting post:', newPost);
-      // Send `newPost` to your service or API
     }
   }
 
-
-  get username() { return this.postForm.get('moderator')?.value?.username ?? ''; }
-  get parkName() { return this.postForm.get('park')?.value?.name ?? ''; }
-  get postDate() { return this.postForm.get('dateCreated')?.value ?? ''; }
+  get username() {
+    return this.postForm.get('moderator')?.value?.username ?? '';
+  }
+  get parkName() {
+    return this.postForm.get('park')?.value?.name ?? '';
+  }
+  get postDate() {
+    return this.postForm.get('dateCreated')?.value ?? '';
+  }
 }
