@@ -1,7 +1,42 @@
-<mat-card *ngIf="post">
-    <mat-card-title>{{ post.title }}</mat-card-title>
-    <img *ngIf="post.thumbnailSmall" [src]="post.thumbnailSmall" alt="Post Image" />
-    <mat-card-content>
-        <p>{{ post.content }}</p>
-    </mat-card-content>
-</mat-card>
+<div class="post-container" *ngIf="post; else loading">
+    <h1>{{ post.title }}</h1>
+
+    <p class="date-created" *ngIf="post.dateCreated">
+        Posted on: {{ post.dateCreated | date:'mediumDate' }}
+    </p>
+
+    <img *ngIf="post.thumbnailLarge" [src]="post.thumbnailLarge" alt="{{ post.title }}" class="thumbnail">
+
+    <div class="content" *ngIf="post.content">
+        {{ post.content }}
+    </div>
+
+    <div class="attachments" *ngIf="post.attachments && post.attachments.length">
+        <h3>Attachments</h3>
+        <div class="attachment" *ngFor="let attachment of post.attachments">
+            <img [src]="attachment" alt="Attachment">
+        </div>
+    </div>
+
+    <div class="moderator" *ngIf="post.moderator">
+        <strong>Moderator:</strong> {{ post.moderator.username }}
+    </div>
+
+    <section class="comments" *ngIf="post.comments && post.comments.length">
+        <h3>Comments ({{ post.comments.length }})</h3>
+
+        <div *ngFor="let comment of post.comments; trackBy: trackByCommentId" class="comment">
+            <p>{{ comment.content }}</p>
+            <small>
+                — {{ comment.commentator.username }},
+                {{ comment.date | date:'short' }}
+            </small>
+        </div>
+    </section>
+</div>
+
+<ng-template #loading>
+    <div class="loading">
+        Loading post details...
+    </div>
+</ng-template>

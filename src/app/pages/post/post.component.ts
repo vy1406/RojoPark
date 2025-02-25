@@ -1,26 +1,34 @@
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Comment, Post, PostService } from '../../servicers/posts.service';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { Post } from '../../servicers/posts.service';
 
 @Component({
   selector: 'app-post',
-  standalone: true,
   imports: [
-    MatCardModule,
     CommonModule
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
 })
-export class PostComponent {
-  @Input() post!: Post;
-  constructor() {
-    console.log('PostComponent created');
+export class PostComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private postService = inject(PostService);
+  post: Post | null = null;
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      const postId = params.get('id');
+
+      if (postId) {
+        this.postService.fetchPostById(postId).subscribe({
+          next: (post) => this.post = post
+        });
+      }
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log('PostComponent changes:', changes);
+  trackByCommentId(index: number, comment: Comment) {
+    return comment.id;
   }
-
 }

@@ -16,4 +16,9 @@ ng g c pages/park --standalone
 - notifications
 - confirm modal
 - toast service
-- new post
+- new post / edit / delete
+- auth service
+
+
+https://github.com/ralftar/ng-mat-carousel?tab=readme-ov-file
+
