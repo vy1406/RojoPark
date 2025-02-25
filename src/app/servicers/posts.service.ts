@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, delay, map, tap } from 'rxjs';
+import { Park } from './parks.service';
 
 export interface User {
   id: string;
@@ -22,7 +23,7 @@ export interface Post {
   thumbnailLarge?: string;
   attachments?: string[];
   content?: string;
-  parkId?: string;
+  park?: Park;
   moderator?: User;
   comments?: Comment[];
 }
