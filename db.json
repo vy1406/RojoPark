@@ -1,8 +1,42 @@
 {
+    "users": [
+      { "id": "1", "username": "bob"},
+      { "id": "2", "username": "alice"}
+    ],
     "parks": [
       { "id": "1", "name": "Green Park", "location": "North" },
       { "id": "2", "name": "Blue Park", "location": "South" },
       { "id": "3", "name": "Yellow Park", "location": "West" }
+    ],
+    "posts": [
+      {
+        "id": "1",
+        "dateCreated": "2020-01-01",
+        "title": "First Post",
+        "thumbnailSmall": "https://media.istockphoto.com/id/1832921325/photo/husky-in-the-garden.jpg?s=2048x2048&w=is&k=20&c=Cw5_Ur-pn59RdfFbKVgBOAWz_Jtr7EfGkL-EjtptgII=",
+        "thumbnailLarge": "https://media.istockphoto.com/id/1832921325/photo/husky-in-the-garden.jpg?s=2048x2048&w=is&k=20&c=Cw5_Ur-pn59RdfFbKVgBOAWz_Jtr7EfGkL-EjtptgII=",
+        "attachments": [
+          "https://media.istockphoto.com/id/1370748197/photo/siberian-husky-dog-lying-oin-the-bright-autumn-forest.jpg?s=2048x2048&w=is&k=20&c=XAbovzgb_wcTFUFbLZeEWWCPVe6lxtHnN3MZcchzyBo=",
+          "https://media.istockphoto.com/id/1451639935/photo/portrait-of-siberian-husky-dog.jpg?s=2048x2048&w=is&k=20&c=cfUPP8om6lwkSAdRKZOtcKC42gpgKZbEAPXZpvPw11w=",
+          "https://media.istockphoto.com/id/979180332/photo/happy-siberian-husky.jpg?s=2048x2048&w=is&k=20&c=4tUwvIIxKYcpkkYYQ5MamUvB79gf7TI05Zxt56avdb0="
+        ],
+        "content": "Hello World",
+        "parkId": "1",
+        "moderator": {
+          "id": "1",
+          "username": "bob"
+        },
+        "comments": [
+          {
+            "id": "1",
+            "content": "Hello from alice",
+            "commentator": { "id": "2", "username": "alice"},
+            "date": "2020-01-01"
+          }
+        ]
+      },
+      { "id": "2", "title": "Second Post", "parkId": "1", "moderatorId": "1" },
+      { "id": "3", "title": "Second Post", "content": "Hello Again", "userId": "2" }
     ]
   }
-  
+

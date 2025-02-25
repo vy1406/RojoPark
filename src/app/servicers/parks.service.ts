@@ -36,6 +36,7 @@ export class ParkService {
 
     return this.http.get<Park>(`${this.url}/${id}`).pipe(
       delay(2000))
-
   }
+
+
 }
