@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ParkService, Park } from '../../servicers/parks.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
 import { Post, PostService } from '../../servicers/posts.service';
 import { PostComponent } from '../../components/post-item/post.component';
 
@@ -31,23 +31,19 @@ export class ParkComponent implements OnInit {
   parkPosts = this.postService.parkPosts;
   loading = this.postService.loading;
 
-  constructor() {
-    console.log('ParkComponent created');
-  }
+  selectedPark$ = this.parkService.selectedPark$;
 
   ngOnInit() {
-    console.log('ParkComponent initialized');
-    this.route.paramMap.subscribe(params => {
-      this.parkId = params.get('id');
-
-      if (this.parkId) {
-        this.parkService.fetchById(this.parkId).subscribe({
-          next: (park) => this.park = park
-        });
-
-        this.postService.fetchByParkId(this.parkId);
-      }
-    });
+    this.route.paramMap.pipe(
+      switchMap(params => {
+        const parkId = params.get('id');
+        if (parkId) {
+          this.postService.fetchByParkId(parkId);
+          return this.parkService.fetchById(parkId)
+        }
+        return [];
+      })
+    ).subscribe();
   }
 
   trackByPostId(index: number, post: Post) {

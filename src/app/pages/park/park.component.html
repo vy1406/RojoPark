@@ -2,7 +2,7 @@
     Loading...
 </div>
 
-<mat-card *ngIf="park">
+<mat-card *ngIf="selectedPark$ | async as park">
     <mat-card-title>{{ park.name }}</mat-card-title>
     <mat-card-content>
         <p><strong>Location:</strong> {{ park.location }}</p>

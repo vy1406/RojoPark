@@ -4,13 +4,14 @@ import { SignupComponent } from './pages/signup/signup.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ParkComponent } from './pages/park/park.component';
 import { PostComponent } from './pages/post/post.component';
+import { PostFormComponent } from './pages/post-form/post-form.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'parks/:id', component: ParkComponent },
+  { path: 'parks/:id/form', component: PostFormComponent },
   { path: 'post/:id', component: PostComponent },
-
   { path: '**', redirectTo: '' }
 ];
