@@ -12,12 +12,15 @@ import { CommentsComponent } from "../../components/comments/comments.component"
     ImgComponent,
     CommentsComponent
   ],
+  standalone: true,
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
 })
+
 export class PostComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private postService = inject(PostService);
+
   post: Post | null = null;
 
   ngOnInit() {
@@ -30,6 +33,28 @@ export class PostComponent implements OnInit {
         });
       }
     });
+  }
+
+  onAddComment(newComment: Partial<Comment>) {
+    console.log(' New comment received:', newComment);
+
+    const commentToPush = {
+      ...newComment,
+      id: Math.random().toString(36).substring(7),
+      commentator: {
+        id: '123',
+        username: 'John Doe'
+      },
+      date: new Date().toISOString()
+    }
+    if (!this.post) return;
+
+    if (!this.post.comments) {
+      this.post.comments = [];
+    }
+
+    this.post.comments.push(commentToPush as Comment);
+
   }
 
 }

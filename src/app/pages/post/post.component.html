@@ -21,7 +21,8 @@
     <div class="moderator" *ngIf="post.moderator">
         <strong>Moderator:</strong> {{ post.moderator.username }}
     </div>
-    <app-comments [comments]="post.comments || []"></app-comments>
+    <app-comments [comments]="post.comments || []" (addComment)="onAddComment($event)">
+    </app-comments>
 
 </div>
 

@@ -8,4 +8,20 @@
             {{ comment.date | date:'short' }}
         </small>
     </div>
+
+
+    <button mat-raised-button color="primary" (click)="showCommentForm = !showCommentForm">
+        {{ showCommentForm ? 'Cancel' : 'Add Comment' }}
+    </button>
+
+    <form *ngIf="showCommentForm" (ngSubmit)="onAddComment()" class="comment-form">
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Write a comment</mat-label>
+            <input matInput [(ngModel)]="newCommentContent" name="comment" required>
+        </mat-form-field>
+
+        <button mat-raised-button color="accent" [disabled]="!newCommentContent">
+            Submit Comment
+        </button>
+    </form>
 </section>
