@@ -106,14 +106,42 @@ export class PostFormComponent {
 
   onSubmit() {
     if (this.postForm.valid) {
-      const newPost: Post = {
-        ...this.postForm.value,
-        thumbnailSmall: this.thumbnailFile?.name || null,
+      const formData = new FormData();
+
+      formData.append('title', this.postForm.get('title')?.value);
+      formData.append('content', this.postForm.get('content')?.value);
+      formData.append('dateCreated', this.postForm.get('dateCreated')?.value);
+      formData.append('moderator', JSON.stringify(this.moderator));
+      formData.append('park', JSON.stringify(this.postForm.get('park')?.value));
+
+      this.postForm.patchValue({
+        thumbnailSmall: this.thumbnailFile ? this.thumbnailFile.name : null,
         attachments: this.attachments.map(f => f.name),
+      });
+
+      const files = {
+        thumbnail: this.thumbnailFile,
+        attachments: [...this.attachments],
       };
-      console.log('Submitting post:', newPost);
+
+      if (files.thumbnail) {
+        formData.append('files[thumbnail]', files.thumbnail);
+      }
+
+      files.attachments.forEach((file, index) => {
+        formData.append(`files[attachments][${index}]`, file);
+      });
+
+      console.log('Submitting FormData:', formData);
+      console.log('Files object:', files);
+
+      this.parkService.uploadPost(formData).subscribe({
+        next: (response) => console.log('Upload Success:', response),
+        error: (error) => console.error('Upload Failed:', error)
+      });
     }
   }
+
 
   get username() {
     return this.postForm.get('moderator')?.value?.username ?? '';

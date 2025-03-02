@@ -18,6 +18,8 @@ ng g c pages/park --standalone
 - toast service
 - new post / edit / delete
 - auth service
+- debounce on search
+- 
 
 - remove pictures, which were selected.
 - send formData.

@@ -47,4 +47,8 @@ export class ParkService {
   setSelectedPark(park: Park) {
     this.selectedParkSubject.next(park);
   }
+
+  uploadPost(formData: FormData) {
+    return this.http.post(`${this.url}/upload`, formData);
+  }
 }

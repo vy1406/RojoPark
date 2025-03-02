@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <button mat-raised-button color="primary" type="submit">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!postForm.valid">
                 Submit Post
             </button>
 
