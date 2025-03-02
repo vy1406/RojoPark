@@ -21,18 +21,8 @@
     <div class="moderator" *ngIf="post.moderator">
         <strong>Moderator:</strong> {{ post.moderator.username }}
     </div>
+    <app-comments [comments]="post.comments || []"></app-comments>
 
-    <section class="comments" *ngIf="post.comments && post.comments.length">
-        <h3>Comments ({{ post.comments.length }})</h3>
-
-        <div *ngFor="let comment of post.comments; trackBy: trackByCommentId" class="comment">
-            <p>{{ comment.content }}</p>
-            <small>
-                — {{ comment.commentator.username }},
-                {{ comment.date | date:'short' }}
-            </small>
-        </div>
-    </section>
 </div>
 
 <ng-template #loading>

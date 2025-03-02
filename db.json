@@ -36,6 +36,12 @@
             "content": "Hello from alice",
             "commentator": { "id": "2", "username": "alice"},
             "date": "2020-01-01"
+          },
+          {
+            "id": "2",
+            "content": "Hello from bob",
+            "commentator": { "id": "1", "username": "bob"},
+            "date": "2020-01-02"
           }
         ]
       },

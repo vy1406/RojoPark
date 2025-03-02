@@ -19,9 +19,10 @@ ng g c pages/park --standalone
 - new post / edit / delete
 - auth service
 - debounce on search
-- 
+- fix date make it with minutes, make ios
 
 - remove pictures, which were selected.
 - send formData.
+
 https://github.com/ralftar/ng-mat-carousel?tab=readme-ov-file
 

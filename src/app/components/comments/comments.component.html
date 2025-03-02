@@ -1,0 +1,11 @@
+<section class="comments" *ngIf="comments && comments.length">
+    <h3>Comments ({{ comments.length }})</h3>
+
+    <div *ngFor="let comment of comments; trackBy: trackByCommentId" class="comment">
+        <p>{{ comment.content }}</p>
+        <small>
+            — {{ comment.commentator.username }},
+            {{ comment.date | date:'short' }}
+        </small>
+    </div>
+</section>
