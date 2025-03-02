@@ -2,11 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Comment, Post, PostService } from '../../servicers/posts.service';
 import { CommonModule } from '@angular/common';
+import { ImgComponent } from '../../components/img/img.component';
 
 @Component({
   selector: 'app-post',
   imports: [
-    CommonModule
+    CommonModule,
+    ImgComponent
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'

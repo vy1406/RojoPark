@@ -5,7 +5,7 @@
         Posted on: {{ post.dateCreated | date:'mediumDate' }}
     </p>
 
-    <img *ngIf="post.thumbnailLarge" [src]="post.thumbnailLarge" alt="{{ post.title }}" class="thumbnail">
+    <app-img *ngIf="post.thumbnailLarge" [src]="post.thumbnailLarge" alt="{{ post.title }}" />
 
     <div class="content" *ngIf="post.content">
         {{ post.content }}
@@ -14,7 +14,7 @@
     <div class="attachments" *ngIf="post.attachments && post.attachments.length">
         <h3>Attachments</h3>
         <div class="attachment" *ngFor="let attachment of post.attachments">
-            <img [src]="attachment" alt="Attachment">
+            <app-img [src]="attachment" alt="Attachment" />
         </div>
     </div>
 
