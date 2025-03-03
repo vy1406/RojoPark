@@ -8,6 +8,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USERNAME_KEY = 'auth_username';
+  private readonly USER_ID_KEY = 'auth_user_id';
   private isBrowser: boolean;
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
@@ -21,13 +22,14 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<{ token: string; username: string }> {
-    const mockResponse = { token: 'mock-token-123', username: 'bob' };
+    const mockResponse = { token: 'mock-token-123', username: 'bob', userId: '1' };
 
     return of(mockResponse).pipe(
       tap(response => {
         if (this.isBrowser) {
           localStorage.setItem(this.TOKEN_KEY, response.token);
           localStorage.setItem(this.USERNAME_KEY, response.username);
+          localStorage.setItem(this.USER_ID_KEY, response.userId);
         }
         this.isAuthenticatedSubject.next(true);
       })
@@ -38,8 +40,14 @@ export class AuthService {
     if (this.isBrowser) {
       localStorage.removeItem(this.TOKEN_KEY);
       localStorage.removeItem(this.USERNAME_KEY);
+      localStorage.removeItem(this.USER_ID_KEY);
     }
     this.isAuthenticatedSubject.next(false);
+  }
+
+
+  getUserId(): string | null {
+    return this.isBrowser ? localStorage.getItem(this.USER_ID_KEY) : null;
   }
 
   getToken(): string | null {

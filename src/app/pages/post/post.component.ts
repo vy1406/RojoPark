@@ -6,6 +6,7 @@ import { ImgComponent } from '../../components/img/img.component';
 import { CommentsComponent } from "../../components/comments/comments.component";
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { MatButtonModule } from '@angular/material/button';
+import { AuthService } from '../../services/auth-service.service';
 
 @Component({
   selector: 'app-post',
@@ -24,7 +25,10 @@ export class PostComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private postService = inject(PostService);
   private confirmDialogService = inject(ConfirmDialogService);
+  private authService = inject(AuthService);
+
   post: Post | null = null;
+  loggedInUserId: string | null = null;
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -36,10 +40,12 @@ export class PostComponent implements OnInit {
         });
       }
     });
+
+    this.loggedInUserId = this.authService.getUserId();
   }
 
   onAddComment(newComment: Partial<Comment>) {
-    console.log(' New comment received:', newComment);
+    console.log(' comment received:', newComment);
 
     const commentToPush = { // TODO for now used a mock user
       ...newComment,
@@ -74,4 +80,7 @@ export class PostComponent implements OnInit {
     });
   }
 
+  isPostOwner(): boolean {
+    return this.post?.moderator?.id === this.loggedInUserId;
+  }
 }

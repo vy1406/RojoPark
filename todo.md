@@ -12,15 +12,14 @@ ng g c pages/park --standalone
 # client: 
 
 - PWA
+    - notifications
+    
 - implement map
-- notifications
-- confirm modal
 - toast service
 - new post / edit / delete
 - auth service
 - debounce on search
 - fix date make it with minutes, make ios
-
 - localstorage the user...
 
 - remove pictures, which were selected.
