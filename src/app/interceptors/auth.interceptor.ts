@@ -9,6 +9,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = authService.getToken();
 
   const protectedRoutes: { url: string; methods: string[] }[] = [
+    // for example
     { url: '/api/protected', methods: ['GET', 'POST', 'PUT', 'DELETE'] },
     { url: '/api/posts', methods: ['POST', 'DELETE'] },
     { url: '/api/user/profile', methods: ['GET', 'PUT'] }

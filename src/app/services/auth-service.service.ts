@@ -1,62 +1,60 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API_URL = 'TODO';
   private readonly TOKEN_KEY = 'auth_token';
-  private readonly USER = 'auth_user';
+  private readonly USERNAME_KEY = 'auth_username';
+  private isBrowser: boolean;
 
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    if (this.isBrowser) {
+      this.isAuthenticatedSubject.next(this.hasToken());
+    }
+  }
 
   login(email: string, password: string): Observable<{ token: string; username: string }> {
     const mockResponse = { token: 'mock-token-123', username: 'bob' };
 
     return of(mockResponse).pipe(
       tap(response => {
-        localStorage.setItem(this.TOKEN_KEY, response.token);
-        localStorage.setItem(this.USER, response.username);
+        if (this.isBrowser) {
+          localStorage.setItem(this.TOKEN_KEY, response.token);
+          localStorage.setItem(this.USERNAME_KEY, response.username);
+        }
         this.isAuthenticatedSubject.next(true);
       })
     );
   }
 
-  signUp(email: string, password: string): Observable<{ token: string; username: string }> {
-    return this.http.post<{ token: string; username: string }>(`${this.API_URL}/signup`, { email, password })
-      .pipe(
-        tap(response => {
-          localStorage.setItem(this.TOKEN_KEY, response.token);
-          localStorage.setItem(this.USER, response.username);
-          this.isAuthenticatedSubject.next(true);
-        })
-      );
-  }
-
   logout() {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER);
+    if (this.isBrowser) {
+      localStorage.removeItem(this.TOKEN_KEY);
+      localStorage.removeItem(this.USERNAME_KEY);
+    }
     this.isAuthenticatedSubject.next(false);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return this.isBrowser ? localStorage.getItem(this.TOKEN_KEY) : null;
   }
 
   getUsername(): string | null {
-    return localStorage.getItem(this.USER);
+    return this.isBrowser ? localStorage.getItem(this.USERNAME_KEY) : null;
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return this.isBrowser ? !!this.getToken() : false;
   }
 
   private hasToken(): boolean {
-    return !!localStorage.getItem(this.TOKEN_KEY);
+    return this.isBrowser ? !!localStorage.getItem(this.TOKEN_KEY) : false;
   }
 }
