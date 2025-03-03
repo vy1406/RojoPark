@@ -27,6 +27,17 @@ export class AuthService {
     );
   }
 
+  signUp(email: string, password: string): Observable<{ token: string; username: string }> {
+    return this.http.post<{ token: string; username: string }>(`${this.API_URL}/signup`, { email, password })
+      .pipe(
+        tap(response => {
+          localStorage.setItem(this.TOKEN_KEY, response.token);
+          localStorage.setItem(this.USER, response.username);
+          this.isAuthenticatedSubject.next(true);
+        })
+      );
+  }
+
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER);

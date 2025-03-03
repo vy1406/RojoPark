@@ -38,12 +38,12 @@ export class PostComponent implements OnInit {
   onAddComment(newComment: Partial<Comment>) {
     console.log(' New comment received:', newComment);
 
-    const commentToPush = {
+    const commentToPush = { // TODO for now used a mock user
       ...newComment,
       id: Math.random().toString(36).substring(7),
       commentator: {
-        id: '123',
-        username: 'John Doe'
+        id: '1',
+        username: 'bob'
       },
       date: new Date().toISOString()
     }
