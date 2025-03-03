@@ -5,6 +5,8 @@ import { HomeComponent } from './pages/home/home.component';
 import { ParkComponent } from './pages/park/park.component';
 import { PostComponent } from './pages/post/post.component';
 import { PostFormComponent } from './pages/post-form/post-form.component';
+import { PrivateComponent } from './pages/private/private.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,5 +15,6 @@ export const routes: Routes = [
   { path: 'parks/:id', component: ParkComponent },
   { path: 'parks/:id/form', component: PostFormComponent },
   { path: 'post/:id', component: PostComponent },
+  { path: 'private', component: PrivateComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '' }
 ];
