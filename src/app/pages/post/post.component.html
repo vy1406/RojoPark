@@ -23,7 +23,9 @@
     </div>
     <app-comments [comments]="post.comments || []" (addComment)="onAddComment($event)">
     </app-comments>
-
+    <button mat-raised-button color="warn" (click)="onDeletePost(post.id)">
+        Delete Post
+    </button>
 </div>
 
 <ng-template #loading>

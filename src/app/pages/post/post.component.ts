@@ -4,13 +4,16 @@ import { Comment, Post, PostService } from '../../services/posts.service';
 import { CommonModule } from '@angular/common';
 import { ImgComponent } from '../../components/img/img.component';
 import { CommentsComponent } from "../../components/comments/comments.component";
+import { ConfirmDialogService } from '../../services/confirm-dialog.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-post',
   imports: [
     CommonModule,
     ImgComponent,
-    CommentsComponent
+    CommentsComponent,
+    MatButtonModule
   ],
   standalone: true,
   templateUrl: './post.component.html',
@@ -20,7 +23,7 @@ import { CommentsComponent } from "../../components/comments/comments.component"
 export class PostComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private postService = inject(PostService);
-
+  private confirmDialogService = inject(ConfirmDialogService);
   post: Post | null = null;
 
   ngOnInit() {
@@ -55,6 +58,20 @@ export class PostComponent implements OnInit {
 
     this.post.comments.push(commentToPush as Comment);
 
+  }
+
+  onDeletePost(postId: string) {
+    this.confirmDialogService.openConfirmDialog({
+      title: 'Delete Post',
+      message: 'Are you sure you want to delete this post? This action cannot be undone.'
+    }).subscribe(confirmed => {
+      if (confirmed) {
+        console.log(`${postId} deleted`);
+
+      } else {
+        console.log('cacnel delete');
+      }
+    });
   }
 
 }
