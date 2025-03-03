@@ -2,7 +2,7 @@ run the mockup server
 
 
 # snippets: 
-ng g service servicers/posts
+ng g service services/posts
 
 ng g c pages/park --standalone
 

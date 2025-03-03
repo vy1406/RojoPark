@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { AuthService } from '../../services/auth-service.service';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 export class LoginComponent {
   loginForm: FormGroup;
+  private authService = inject(AuthService);
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
@@ -34,8 +36,16 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      console.log('Login Data:', this.loginForm.value);
-      this.router.navigate(['/home']); 
+      const { email, password } = this.loginForm.value;
+      this.authService.login(email, password).subscribe({
+        next: () => {
+          console.log('✅ Login successful. Redirecting...');
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error('Login failed:', err);
+        }
+      });
     }
   }
 }

@@ -2,9 +2,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ParkService, Park } from '../../servicers/parks.service';
+import { ParkService, Park } from '../../services/parks.service';
 import { BehaviorSubject, switchMap } from 'rxjs';
-import { Post, PostService } from '../../servicers/posts.service';
+import { Post, PostService } from '../../services/posts.service';
 import { PostComponent } from '../../components/post-item/post.component';
 
 @Component({

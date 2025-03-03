@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { Park, ParkService } from '../../servicers/parks.service';
+import { Park, ParkService } from '../../services/parks.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, switchMap } from 'rxjs';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Post, User } from '../../servicers/posts.service';
+import { Post, User } from '../../services/posts.service';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';

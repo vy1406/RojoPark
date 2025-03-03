@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { Post } from '../../servicers/posts.service';
+import { Post } from '../../services/posts.service';
 import { Router } from '@angular/router';
 import { ImgComponent } from '../img/img.component';
 
