@@ -7,26 +7,29 @@ ng g service services/posts
 ng g c pages/park --standalone
 
 # aws:
+- webSockets. 
+- notifications
 
-
-# client: 
+# client | functionality
 
 - PWA
     - notifications
 
+- messages
 - implement map
-- toast service
-- new post / edit / delete
-
 - debounce on search
 - fix date make it with minutes, make ios
-- localstorage the user...
+- signup ( register with pet name ), add picture
+- new park form
 
+# client | UI
+- add the carousel
 - remove pictures, which were selected.
-- send formData.
 
-# client OPTIMIZATION 
+
+# client | OPTIMIZATION 
 - bonus:
     - subscribe to comments, on each adding comments post data and show loader, currently u send the whole post.
+
 https://github.com/ralftar/ng-mat-carousel?tab=readme-ov-file
 
