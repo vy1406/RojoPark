@@ -13,11 +13,11 @@ ng g c pages/park --standalone
 
 - PWA
     - notifications
-    
+
 - implement map
 - toast service
 - new post / edit / delete
-- auth service
+
 - debounce on search
 - fix date make it with minutes, make ios
 - localstorage the user...

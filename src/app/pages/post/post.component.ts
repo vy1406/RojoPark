@@ -7,6 +7,7 @@ import { CommentsComponent } from "../../components/comments/comments.component"
 import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../services/auth-service.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-post',
@@ -26,6 +27,7 @@ export class PostComponent implements OnInit {
   private postService = inject(PostService);
   private confirmDialogService = inject(ConfirmDialogService);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
 
   post: Post | null = null;
   loggedInUserId: string | null = null;
@@ -67,17 +69,18 @@ export class PostComponent implements OnInit {
   }
 
   onDeletePost(postId: string) {
-    this.confirmDialogService.openConfirmDialog({
-      title: 'Delete Post',
-      message: 'Are you sure you want to delete this post? This action cannot be undone.'
-    }).subscribe(confirmed => {
-      if (confirmed) {
-        console.log(`${postId} deleted`);
+    this.toastService.show('Post deleted successfully!', 'Close');
+    // this.confirmDialogService.openConfirmDialog({
+    //   title: 'Delete Post',
+    //   message: 'Are you sure you want to delete this post? This action cannot be undone.'
+    // }).subscribe(confirmed => {
+    //   if (confirmed) {
+    //     console.log(`${postId} deleted`);
 
-      } else {
-        console.log('cacnel delete');
-      }
-    });
+    //   } else {
+    //     console.log('cacnel delete');
+    //   }
+    // });
   }
 
   isPostOwner(): boolean {
