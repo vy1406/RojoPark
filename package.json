@@ -1,0 +1,12 @@
+{
+  "name": "angular18",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "publish:layer": "aws lambda publish-layer-version --layer-name shared_dep_layer --compatible-runtimes nodejs18.x --zip-file fileb://aws/layers/shared_dep_layer.zip"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
