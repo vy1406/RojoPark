@@ -2,6 +2,11 @@ import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 
+export interface LoginDetails {
+  username: string | null;
+  userId: string | null;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -9,20 +14,33 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USERNAME_KEY = 'auth_username';
   private readonly USER_ID_KEY = 'auth_user_id';
-  private isBrowser: boolean;
 
+  private isBrowser: boolean;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private loginDetailsSubject = new BehaviorSubject<LoginDetails>({
+    username: null,
+    userId: null,
+  });
+
+  loginDetails$ = this.loginDetailsSubject.asObservable();
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
+
     if (this.isBrowser) {
-      this.isAuthenticatedSubject.next(this.hasToken());
+      const isLoggedIn = this.hasToken();
+      this.isAuthenticatedSubject.next(isLoggedIn);
+
+      this.loginDetailsSubject.next({
+        username: localStorage.getItem(this.USERNAME_KEY),
+        userId: localStorage.getItem(this.USER_ID_KEY),
+      });
     }
   }
 
   login(email: string, password: string): Observable<{ token: string; username: string }> {
-    const mockResponse = { token: 'mock-token-123', username: 'bob', userId: '1' };
+    const mockResponse = { token: 'mock-token-123', username: email, userId: '1' };
 
     return of(mockResponse).pipe(
       tap(response => {
@@ -32,6 +50,10 @@ export class AuthService {
           localStorage.setItem(this.USER_ID_KEY, response.userId);
         }
         this.isAuthenticatedSubject.next(true);
+        this.loginDetailsSubject.next({
+          username: response.username,
+          userId: response.userId,
+        });
       })
     );
   }

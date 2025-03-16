@@ -6,13 +6,13 @@
       <a mat-list-item routerLink="/signup" (click)="sidenav.close()">Signup</a>
     </mat-nav-list>
   </mat-sidenav>
-
   <mat-sidenav-content class="main-content">
     <button mat-icon-button class="menu-button" (click)="sidenav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
 
     <main class="main">
+      <app-login-details></app-login-details>
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>

@@ -29,8 +29,8 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      // email: ['', [Validators.required, Validators.email]],
+      // password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -47,5 +47,33 @@ export class LoginComponent {
         }
       });
     }
+  }
+
+  loginWithBob() {
+    this.authService.login('bob', 'password').subscribe({
+      next: () => {
+        console.log('✅ Login successful. Redirecting...');
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+      }
+    });
+  }
+
+  loginWithAlice() {
+    this.authService.login('alice', 'password').subscribe({
+      next: () => {
+        console.log('✅ Login successful. Redirecting...');
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+      }
+    });
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

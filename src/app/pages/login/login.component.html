@@ -1,28 +1,36 @@
 <mat-card>
-    <mat-card-title>Login</mat-card-title>
-    <mat-card-content>
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        
-        <mat-form-field appearance="fill">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email">
-          <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-            Invalid email address
-          </mat-error>
-        </mat-form-field>
-  
-        <mat-form-field appearance="fill">
-          <mat-label>Password</mat-label>
-          <input matInput formControlName="password" type="password">
-          <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-            Password must be at least 6 characters
-          </mat-error>
-        </mat-form-field>
-  
-        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
-          Login
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
-  
+  <mat-card-title>Login</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email">
+        <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          Invalid email address
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password">
+        <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          Password must be at least 6 characters
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+        Login
+      </button>
+      <button mat-raised-button color="primary" type="button" (click)="loginWithBob()">
+        LoginWithBob
+      </button>
+      <button mat-raised-button color="primary" type="button" (click)="loginWithAlice()">
+        LoginWithAlice
+      </button>
+      <button mat-raised-button color="primary" type="button" (click)="logout()">
+        logout
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

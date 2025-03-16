@@ -1,6 +1,5 @@
 run the mockup server
 
-
 # snippets: 
 ng g service services/posts
 
@@ -15,17 +14,19 @@ ng g c pages/park --standalone
 - PWA
     - notifications
 
+- add two mock logins.
 - messages
 - implement map
 - debounce on search
 - fix date make it with minutes, make ios
 - signup ( register with pet name ), add picture
 - new park form
+- howTo. 
+
 
 # client | UI
 - add the carousel
 - remove pictures, which were selected.
-
 
 # client | OPTIMIZATION 
 - bonus:
