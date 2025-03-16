@@ -32,3 +32,17 @@ ng g c pages/park --standalone
 
 https://github.com/ralftar/ng-mat-carousel?tab=readme-ov-file
 
+
+
+# How To:
+
+- Publish layers:
+1. zip whatever in shared_dep_layer, call it 'shared_dep_layer'
+2. run the command publish:layer
+
+- Publish lambdas ( for example login):
+1. go to handlers ... -> login
+2. select all files inside login folder ( etc index.js )
+3. move the folder one step up, to the level login folder ( == inside the auth folder )
+4. change the auth:uploadzip to the correct file
+5. npm run auth:uploadzip

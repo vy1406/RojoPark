@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "CloudFormation template for the authentication service for RojoPark"
+
+Parameters:
+  SharedDependenciesLayerArn:
+    Type: String
+    Default: "arn:aws:lambda:us-east-1:491085397542:layer:shared_dep_layer:1"
+    Description: "ARN of the shared dependencies Lambda Layer"
+
+  LambdaBucketName:
+    Type: String
+    Default: "rojo-park-lambda-bucket"
+    Description: "Name of the S3 bucket to store the Lambda deployment packages"
+
+
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: LambdaLogging
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - "s3:GetObject"
+                  - "s3:ListBucket"
+                Resource: 
+                  - !Sub "arn:aws:s3:::${LambdaBucketName}"
+                  - !Sub "arn:aws:s3:::${LambdaBucketName}/auth/*"
+
+  # Lambda Function (Login)
+  LoginLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: RojoLoginFunction
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref LambdaBucketName
+        S3Key: auth/login.zip  
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Layers:
+        - !Ref SharedDependenciesLayerArn
+      MemorySize: 128
+      Timeout: 10
+
+Outputs:
+  SharedLayerARN:
+    Value: !Ref SharedDependenciesLayerArn
+    Description: "Lambda Layer ARN used for this deployment"
+
+  S3BucketName:
+    Value: !Ref LambdaBucketName
+    Description: "S3 bucket name for storing Lambda function packages"
