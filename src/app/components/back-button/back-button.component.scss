@@ -1,0 +1,16 @@
+.back-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+
+    mat-icon {
+        font-size: 24px;
+    }
+}

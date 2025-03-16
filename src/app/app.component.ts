@@ -6,6 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoginDetailsComponent } from './components/login-details/login-details.component';
+import { BackButtonComponent } from './components/back-button/back-button.component';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ import { LoginDetailsComponent } from './components/login-details/login-details.
   imports: [
     CommonModule,
     LoginDetailsComponent,
+    BackButtonComponent,
     MatSidenavModule,
     MatIconModule,
     MatButtonModule,

@@ -44,7 +44,7 @@ export class ParkService {
     );
   }
 
-  setSelectedPark(park: Park) {
+  setSelectedPark(park: Park | null) {
     this.selectedParkSubject.next(park);
   }
 

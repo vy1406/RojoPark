@@ -3,6 +3,8 @@
 </div>
 
 <mat-card *ngIf="selectedPark$ | async as park">
+    <button mat-button (click)="backToParks()">Back to parks</button>
+    <button mat-button (click)="newPost()">New Post</button>
     <mat-card-title>{{ park.name }}</mat-card-title>
     <mat-card-content>
         <p><strong>Location:</strong> {{ park.location }}</p>

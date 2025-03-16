@@ -1,4 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
+
   <mat-sidenav #sidenav mode="over" class="sidenav">
     <mat-nav-list>
       <a mat-list-item routerLink="/" (click)="sidenav.close()"> Home</a>
@@ -13,6 +14,7 @@
 
     <main class="main">
       <app-login-details></app-login-details>
+      <app-back-button></app-back-button>
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>

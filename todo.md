@@ -14,15 +14,13 @@ ng g c pages/park --standalone
 - PWA
     - notifications
 
-- add two mock logins.
 - messages
 - implement map
 - debounce on search
 - fix date make it with minutes, make ios
 - signup ( register with pet name ), add picture
-- new park form
+- new park form - email / step function
 - howTo. 
-
 
 # client | UI
 - add the carousel
