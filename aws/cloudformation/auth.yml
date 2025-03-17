@@ -117,6 +117,32 @@ Resources:
       PathPart: signup
       RestApiId: !Ref RojoApiGateway
 
+  RojoLoginOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RojoApiGateway
+      ResourceId: !Ref RojoLoginResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          "application/json": "{\"statusCode\": 200}"
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+            ResponseTemplates:
+              "application/json": ""
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+
   RojoLoginMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -132,6 +158,34 @@ Resources:
         - StatusCode: 200
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+            method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+
+  RojoSignupOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RojoApiGateway
+      ResourceId: !Ref RojoSignupResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          "application/json": "{\"statusCode\": 200}"
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+            ResponseTemplates:
+              "application/json": ""
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
 
   RojoSignupMethod:
     Type: AWS::ApiGateway::Method
@@ -148,6 +202,8 @@ Resources:
         - StatusCode: 200
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+            method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
 
   RojoApiDeployment:
     Type: AWS::ApiGateway::Deployment

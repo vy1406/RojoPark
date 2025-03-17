@@ -15,7 +15,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USERNAME_KEY = 'auth_username';
   private readonly USER_ID_KEY = 'auth_user_id';
-  private apiUrl = 'https://9ooqbvbc5g.execute-api.us-east-1.amazonaws.com/prod/';
+  private apiUrl = 'https://aat45k9el1.execute-api.us-east-1.amazonaws.com/prod';
 
   private isBrowser: boolean;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
