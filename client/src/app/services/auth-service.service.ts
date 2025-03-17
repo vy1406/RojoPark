@@ -41,25 +41,8 @@ export class AuthService {
     }
   }
 
-  signUp(payload: any): Observable<any> {
-    return this.http.post<{ token: string; username: string; userId: string }>(
-      `${this.apiUrl}/signup`,
-      payload
-    ).pipe(
-      tap(response => {
-        console.log('Signup response:', response);
-        // if (this.isBrowser) {
-        //   localStorage.setItem(this.TOKEN_KEY, response.token);
-        //   localStorage.setItem(this.USERNAME_KEY, response.username);
-        //   localStorage.setItem(this.USER_ID_KEY, response.userId);
-        // }
-        // this.isAuthenticatedSubject.next(true);
-        // this.loginDetailsSubject.next({
-        //   username: response.username,
-        //   userId: response.userId,
-        // });
-      })
-    );
+  signUp(formData: FormData): Observable<any> {
+    return this.http.post(this.apiUrl, formData);
   }
 
   login(email: string, password: string): Observable<{ token: string; username: string }> {
