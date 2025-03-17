@@ -4,7 +4,7 @@ Description: "CloudFormation template for the authentication service for RojoPar
 Parameters:
   SharedDependenciesLayerArn:
     Type: String
-    Default: "arn:aws:lambda:us-east-1:491085397542:layer:shared_dep_layer:1"
+    Default: "arn:aws:lambda:us-east-1:491085397542:layer:shared_dep_layer:2"
     Description: "ARN of the shared dependencies Lambda Layer"
 
   LambdaBucketName:
@@ -12,10 +12,8 @@ Parameters:
     Default: "rojo-park-lambda-bucket"
     Description: "Name of the S3 bucket to store the Lambda deployment packages"
 
-
 Resources:
-
-  UsersTable:
+  RojoUsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: RojoUsersTable
@@ -27,10 +25,10 @@ Resources:
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
-  LambdaExecutionRole:
+  RojoLambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: LambdaExecutionRole
+      RoleName: RojoLambdaExecutionRole
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -39,26 +37,30 @@ Resources:
               Service: "lambda.amazonaws.com"
             Action: "sts:AssumeRole"
       Policies:
-        - PolicyName: LambdaLogging
+        - PolicyName: RojoDynamoDBAccess
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              - Effect: "Allow"
+              - Effect: Allow
                 Action:
-                  - "logs:CreateLogGroup"
-                  - "logs:CreateLogStream"
-                  - "logs:PutLogEvents"
-                Resource: "*"
-              - Effect: "Allow"
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:Query
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/RojoUsersTable"
+        - PolicyName: RojoCloudWatchLogsAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
                 Action:
-                  - "s3:GetObject"
-                  - "s3:ListBucket"
-                Resource: 
-                  - !Sub "arn:aws:s3:::${LambdaBucketName}"
-                  - !Sub "arn:aws:s3:::${LambdaBucketName}/auth/*"
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "arn:aws:logs:*:*:*"
 
-  # Lambda Function (Login)
-  LoginLambda:
+  RojoLoginFunction:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: RojoLoginFunction
@@ -66,18 +68,104 @@ Resources:
       Handler: index.handler
       Code:
         S3Bucket: !Ref LambdaBucketName
-        S3Key: auth/login.zip  
-      Role: !GetAtt LambdaExecutionRole.Arn
+        S3Key: auth/login.zip
+      Role: !GetAtt RojoLambdaExecutionRole.Arn
       Layers:
         - !Ref SharedDependenciesLayerArn
       MemorySize: 128
       Timeout: 10
+      Environment:
+        Variables:
+          USERS_TABLE: "RojoUsersTable"
+          JWT_SECRET: "mysecretkey3"
+
+  RojoSignupFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: RojoSignupFunction
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref LambdaBucketName
+        S3Key: auth/signup.zip
+      Role: !GetAtt RojoLambdaExecutionRole.Arn
+      Layers:
+        - !Ref SharedDependenciesLayerArn
+      MemorySize: 128
+      Timeout: 10
+      Environment:
+        Variables:
+          USERS_TABLE: "RojoUsersTable"
+          JWT_SECRET: "mysecretkey3"
+
+  RojoApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: RojoAuthApi
+
+  RojoLoginResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt RojoApiGateway.RootResourceId
+      PathPart: login
+      RestApiId: !Ref RojoApiGateway
+
+  RojoSignupResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt RojoApiGateway.RootResourceId
+      PathPart: signup
+      RestApiId: !Ref RojoApiGateway
+
+  RojoLoginMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RojoApiGateway
+      ResourceId: !Ref RojoLoginResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RojoLoginFunction.Arn}/invocations"
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+
+  RojoSignupMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RojoApiGateway
+      ResourceId: !Ref RojoSignupResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RojoSignupFunction.Arn}/invocations"
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+
+  RojoLoginPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt RojoLoginFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RojoApiGateway}/*"
+
+  RojoSignupPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt RojoSignupFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RojoApiGateway}/*"
 
 Outputs:
-  SharedLayerARN:
-    Value: !Ref SharedDependenciesLayerArn
-    Description: "Lambda Layer ARN used for this deployment"
-
-  S3BucketName:
-    Value: !Ref LambdaBucketName
-    Description: "S3 bucket name for storing Lambda function packages"
+  RojoApiUrl:
+    Description: "URL of the API Gateway"
+    Value: !Sub "https://${RojoApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod/"
