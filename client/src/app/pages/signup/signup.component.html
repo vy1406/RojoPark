@@ -12,7 +12,6 @@
         </mat-error>
       </mat-form-field>
 
-
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Password</mat-label>
         <input matInput formControlName="password" type="password">
@@ -25,22 +24,21 @@
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Confirm Password</mat-label>
         <input matInput formControlName="confirmPassword" type="password">
-
         <mat-error *ngIf="confirmPassword?.invalid && confirmPassword?.touched">
           <span *ngIf="confirmPassword?.errors?.['required']">Confirm Password is required</span>
         </mat-error>
-
-        <mat-error *ngIf="signupForm.errors?.['passwordMismatch'] && confirmPassword?.touched">
-          Passwords do not match
-        </mat-error>
-
       </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid">
-        Sign Up
-      </button>
+      <div class="file-upload-container">
+        <label class="file-label">Upload Profile Picture</label>
+        <input type="file" (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/gif">
+        <p *ngIf="selectedFile">
+          Selected file: <strong>{{ selectedFile.name }}</strong> ({{ selectedFile.size | number }} bytes)
+        </p>
+      </div>
+
       <button mat-raised-button color="primary" type="submit">
-        Sign Up ( not disabled )
+        Sign Up lol
       </button>
 
     </form>

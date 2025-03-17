@@ -25,6 +25,8 @@ import { AuthService } from '../../services/auth-service.service';
 export class SignupComponent {
   signupForm: FormGroup;
   private authService = inject(AuthService);
+  selectedFile: File | null = null;
+  base64File: string | null = null;
 
   constructor(private fb: FormBuilder) {
     this.signupForm = this.fb.group(
@@ -37,18 +39,52 @@ export class SignupComponent {
     );
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const allowedTypes = ['image/png', 'image/jpeg', 'image/gif'];
+      const maxSize = 4 * 1024 * 1024; // 4MB max
+
+      if (!allowedTypes.includes(file.type)) {
+        console.error('❌ Invalid file type. Only PNG, JPG, and GIF allowed.');
+        return;
+      }
+
+      if (file.size > maxSize) {
+        console.error('❌ File too large. Max size: 4MB');
+        return;
+      }
+
+      this.selectedFile = file;
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.base64File = reader.result?.toString().split(',')[1] || null; // Remove the metadata part
+      };
+    }
+  }
 
   onSubmit() {
-    this.authService.signUp(this.email?.value || "lolemail", this.password?.value || "lolpassword").subscribe({
-      next: () => {
-        console.log('✅ Signup successful. Redirecting...');
-        // this.router.navigate(['/home']);
-      }
-    });
+    if (this.signupForm.invalid) {
+      console.log('❌ Invalid Form');
+      return;
+    }
 
-    // if (this.signupForm.valid) {
-    //   console.log('Form Submitted:', this.signupForm.value);
-    // }
+    const payload = {
+      email: this.signupForm.get('email')?.value,
+      password: this.signupForm.get('password')?.value,
+      fileBase64: this.base64File, // Send file as Base64 string
+    };
+
+    this.authService.signUp(payload).subscribe({
+      next: (response) => {
+        console.log('✅ Signup Response:', response);
+      },
+      error: (error) => {
+        console.error('❌ Signup Error:', error);
+      },
+    });
   }
 
   get email() { return this.signupForm.get('email'); }

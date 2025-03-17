@@ -15,7 +15,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USERNAME_KEY = 'auth_username';
   private readonly USER_ID_KEY = 'auth_user_id';
-  private apiUrl = 'https://aat45k9el1.execute-api.us-east-1.amazonaws.com/prod';
+  private apiUrl = 'https://f2pl9hv04l.execute-api.us-east-1.amazonaws.com/prod';
 
   private isBrowser: boolean;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
@@ -41,10 +41,10 @@ export class AuthService {
     }
   }
 
-  signUp(email: string, password: string): Observable<{ token: string; username: string }> {
+  signUp(payload: any): Observable<any> {
     return this.http.post<{ token: string; username: string; userId: string }>(
       `${this.apiUrl}/signup`,
-      { username: email, password }
+      payload
     ).pipe(
       tap(response => {
         console.log('Signup response:', response);
