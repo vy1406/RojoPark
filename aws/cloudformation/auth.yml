@@ -149,6 +149,16 @@ Resources:
           ResponseParameters:
             method.response.header.Access-Control-Allow-Origin: "'*'"
 
+  RojoApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - RojoLoginMethod
+      - RojoSignupMethod
+    Properties:
+      RestApiId: !Ref RojoApiGateway
+      Description: "Deploying RojoAuthApi"
+      StageName: prod
+
   RojoLoginPermission:
     Type: AWS::Lambda::Permission
     Properties:
@@ -167,5 +177,5 @@ Resources:
 
 Outputs:
   RojoApiUrl:
-    Description: "URL of the API Gateway"
+    Description: "Invoke URL for the API Gateway"
     Value: !Sub "https://${RojoApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod/"

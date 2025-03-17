@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { passwordMatchValidator } from './validator';
+import { AuthService } from '../../services/auth-service.service';
 
 @Component({
   selector: 'app-signup',
@@ -23,6 +24,7 @@ import { passwordMatchValidator } from './validator';
 })
 export class SignupComponent {
   signupForm: FormGroup;
+  private authService = inject(AuthService);
 
   constructor(private fb: FormBuilder) {
     this.signupForm = this.fb.group(
@@ -37,9 +39,16 @@ export class SignupComponent {
 
 
   onSubmit() {
-    if (this.signupForm.valid) {
-      console.log('Form Submitted:', this.signupForm.value);
-    }
+    this.authService.signUp(this.email?.value || "lolemail", this.password?.value || "lolpassword").subscribe({
+      next: () => {
+        console.log('✅ Signup successful. Redirecting...');
+        // this.router.navigate(['/home']);
+      }
+    });
+
+    // if (this.signupForm.valid) {
+    //   console.log('Form Submitted:', this.signupForm.value);
+    // }
   }
 
   get email() { return this.signupForm.get('email'); }

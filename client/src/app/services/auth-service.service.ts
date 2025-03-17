@@ -1,6 +1,7 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 export interface LoginDetails {
   username: string | null;
@@ -14,6 +15,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USERNAME_KEY = 'auth_username';
   private readonly USER_ID_KEY = 'auth_user_id';
+  private apiUrl = 'https://9ooqbvbc5g.execute-api.us-east-1.amazonaws.com/prod/';
 
   private isBrowser: boolean;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
@@ -25,7 +27,7 @@ export class AuthService {
   loginDetails$ = this.loginDetailsSubject.asObservable();
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private http: HttpClient) {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
     if (this.isBrowser) {
@@ -37,6 +39,27 @@ export class AuthService {
         userId: localStorage.getItem(this.USER_ID_KEY),
       });
     }
+  }
+
+  signUp(email: string, password: string): Observable<{ token: string; username: string }> {
+    return this.http.post<{ token: string; username: string; userId: string }>(
+      `${this.apiUrl}/signup`,
+      { username: email, password }
+    ).pipe(
+      tap(response => {
+        console.log('Signup response:', response);
+        // if (this.isBrowser) {
+        //   localStorage.setItem(this.TOKEN_KEY, response.token);
+        //   localStorage.setItem(this.USERNAME_KEY, response.username);
+        //   localStorage.setItem(this.USER_ID_KEY, response.userId);
+        // }
+        // this.isAuthenticatedSubject.next(true);
+        // this.loginDetailsSubject.next({
+        //   username: response.username,
+        //   userId: response.userId,
+        // });
+      })
+    );
   }
 
   login(email: string, password: string): Observable<{ token: string; username: string }> {
