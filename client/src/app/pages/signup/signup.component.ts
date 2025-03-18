@@ -25,12 +25,11 @@ import { AuthService } from '../../services/auth-service.service';
 export class SignupComponent {
   signupForm: FormGroup;
   private authService = inject(AuthService);
-  selectedFile: File | null = null;
 
   constructor(private fb: FormBuilder) {
     this.signupForm = this.fb.group(
       {
-        email: ['', [Validators.required, Validators.email]],
+        username: ['', [Validators.required, Validators.minLength(3)]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required]
       },
@@ -41,16 +40,20 @@ export class SignupComponent {
 
   onSubmit() {
 
+    this.authService.signUp(
+      this.username?.value,
+      this.password?.value
+    ).subscribe(
+      (response) => {
+        console.log(response);
+      }
+    );
 
-    // continue here. update the signup method to accept user and password, no need for formData
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
-  }
 
 
-  get email() { return this.signupForm.get('email'); }
+  get username() { return this.signupForm.get('username'); }
   get password() { return this.signupForm.get('password'); }
   get confirmPassword() { return this.signupForm.get('confirmPassword'); }
 }

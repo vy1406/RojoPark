@@ -29,28 +29,13 @@ export class LoginComponent {
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.loginForm = this.fb.group({
-      // email: ['', [Validators.required, Validators.email]],
-      // password: ['', [Validators.required, Validators.minLength(6)]]
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.authService.login(email, password).subscribe({
-        next: () => {
-          console.log('✅ Login successful. Redirecting...');
-          this.router.navigate(['/home']);
-        },
-        error: (err) => {
-          console.error('Login failed:', err);
-        }
-      });
-    }
-  }
-
-  loginWithBob() {
-    this.authService.login('bob', 'password').subscribe({
+    this.authService.login(this.username?.value, this.password?.value).subscribe({
       next: () => {
         console.log('✅ Login successful. Redirecting...');
         this.router.navigate(['/home']);
@@ -61,19 +46,11 @@ export class LoginComponent {
     });
   }
 
-  loginWithAlice() {
-    this.authService.login('alice', 'password').subscribe({
-      next: () => {
-        console.log('✅ Login successful. Redirecting...');
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        console.error('Login failed:', err);
-      }
-    });
-  }
 
   logout() {
     this.authService.logout();
   }
+
+  get username() { return this.loginForm.get('username'); }
+  get password() { return this.loginForm.get('password'); }
 }
