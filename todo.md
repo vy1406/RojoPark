@@ -46,3 +46,10 @@ https://github.com/ralftar/ng-mat-carousel?tab=readme-ov-file
 3. move the folder one step up, to the level login folder ( == inside the auth folder )
 4. change the auth:uploadzip to the correct file
 5. npm run auth:uploadzip
+
+
+# Continue:
+- add user to user Table
+- create service to upload with pre-signed url. 
+- create a profile page where he can upload.
+- generate github profile type

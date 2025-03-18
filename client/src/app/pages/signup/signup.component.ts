@@ -26,7 +26,6 @@ export class SignupComponent {
   signupForm: FormGroup;
   private authService = inject(AuthService);
   selectedFile: File | null = null;
-  base64File: string | null = null;
 
   constructor(private fb: FormBuilder) {
     this.signupForm = this.fb.group(
@@ -43,19 +42,7 @@ export class SignupComponent {
   onSubmit() {
 
 
-    const formData = new FormData();
-    formData.append('email', this.signupForm.get('email')?.value);
-    formData.append('password', this.signupForm.get('password')?.value);
-    formData.append('file', this.selectedFile || "");
-
-    this.authService.signUp(formData).subscribe({
-      next: (response) => {
-        console.log('✅ Signup Response:', response);
-      },
-      error: (error) => {
-        console.error('❌ Signup Error:', error);
-      },
-    });
+    // continue here. update the signup method to accept user and password, no need for formData
   }
 
   onFileSelected(event: any) {
