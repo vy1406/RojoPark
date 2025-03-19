@@ -1,23 +1,8 @@
-.edit-icon {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-.profile-container {
-    max-width: 400px;
-    margin: auto;
-    text-align: center;
-    padding: 20px;
-}
-
 .avatar-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     margin-bottom: 20px;
 }
 
@@ -32,4 +17,13 @@
     height: 120px;
     background-color: #ddd;
     border-radius: 10px;
+}
+
+.edit-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
