@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: "CloudFormation template for S3 pre-signed URL service for RojoPark"
+Description: "CloudFormation template for S3 file uploads using pre-signed URLs for RojoPark"
 
 Parameters:
   LambdaBucketName:
@@ -17,20 +17,6 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-
-  RojoImageBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref RojoImageBucket
-      PolicyDocument:
-        Statement:
-          - Effect: Allow
-            Principal: "*"
-            Action: "s3:PutObject"
-            Resource: !Sub "arn:aws:s3:::${RojoImageBucket}/*"
-            Condition:
-              StringEquals:
-                "s3:x-amz-acl": "private"
 
   RojoS3LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -75,7 +61,7 @@ Resources:
       Handler: index.handler
       Code:
         S3Bucket: !Ref LambdaBucketName
-        S3Key: s3/generate-presigned-url.zip
+        S3Key: files/generate-presigned-url.zip
       Role: !GetAtt RojoS3LambdaExecutionRole.Arn
       MemorySize: 128
       Timeout: 10
@@ -92,7 +78,7 @@ Resources:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !GetAtt RojoS3ApiGateway.RootResourceId
-      PathPart: generate-presigned-url
+      PathPart: get-presigned-url
       RestApiId: !Ref RojoS3ApiGateway
 
   RojoPresignedUrlMethod:
@@ -128,4 +114,4 @@ Resources:
 Outputs:
   RojoPresignedUrlApi:
     Description: "API Endpoint to Get Pre-signed URL"
-    Value: !Sub "https://${RojoS3ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod/generate-presigned-url"
+    Value: !Sub "https://${RojoS3ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod/get-presigned-url"

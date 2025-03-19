@@ -1,10 +1,10 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { GetSignedUrl } from "@aws-sdk/s3-request-presigner";
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 const s3 = new S3Client({ region: process.env.AWS_REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME;
 
-export async function handler(event) {
+exports.handler = async (event) => {
     try {
         const body = JSON.parse(event.body);
         const { fileName, fileType } = body;
@@ -23,7 +23,7 @@ export async function handler(event) {
             ACL: "private",
         };
 
-        const url = await GetSignedUrl(s3, new PutObjectCommand(params), {
+        const url = await getSignedUrl(s3, new PutObjectCommand(params), {
             expiresIn: 300, //  5 minutes
         });
 

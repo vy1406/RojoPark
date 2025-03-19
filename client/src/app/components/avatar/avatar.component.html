@@ -6,12 +6,19 @@
         <div *ngIf="!avatarSvg" class="placeholder-avatar"></div>
     </ng-template>
 
-    <input type="file" #fileInput hidden (change)="onFileSelected($event)">
+    <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*">
+
     <button *ngIf="allowFileUpload" mat-icon-button class="edit-icon" (click)="triggerFileInput(fileInput)">
         <mat-icon>edit</mat-icon>
     </button>
+
+    <button *ngIf="selectedFile && !isUploading" mat-icon-button class="upload-icon" (click)="uploadFile()">
+        <mat-icon>upload</mat-icon>
+    </button>
+
+    <mat-spinner *ngIf="isUploading" diameter="30"></mat-spinner>
 </div>
 
-<button mat-raised-button color="primary" (click)="generateAvatar()">
+<button mat-raised-button color="primary" (click)="generateAvatar()" [disabled]="isUploading">
     Generate Avatar
 </button>
