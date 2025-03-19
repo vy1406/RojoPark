@@ -50,29 +50,20 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<any> {
-    console.log('login', username, password);
-    const body = {
-      username,
-      password,
-    }
-    return this.http.post(`${this.apiUrl}/login`, body);
-
-    // const mockResponse = { token: 'mock-token-123', username, userId: '1' };
-
-    // return of(mockResponse).pipe(
-    //   tap(response => {
-    //     if (this.isBrowser) {
-    //       localStorage.setItem(this.TOKEN_KEY, response.token);
-    //       localStorage.setItem(this.USERNAME_KEY, response.username);
-    //       localStorage.setItem(this.USER_ID_KEY, response.userId);
-    //     }
-    //     this.isAuthenticatedSubject.next(true);
-    //     this.loginDetailsSubject.next({
-    //       username: response.username,
-    //       userId: response.userId,
-    //     });
-    //   })
-    // );
+    return this.http.post<{ token: string; username: string; userId: string }>(
+      `${this.apiUrl}/login`,
+      { username, password }
+    ).pipe(
+      tap(response => {
+        if (this.isBrowser) {
+          localStorage.setItem(this.TOKEN_KEY, response.token);
+          localStorage.setItem(this.USERNAME_KEY, response.username);
+          localStorage.setItem(this.USER_ID_KEY, response.userId);
+        }
+        this.isAuthenticatedSubject.next(true);
+        this.loginDetailsSubject.next({ username: response.username, userId: response.userId });
+      })
+    );
   }
 
   logout() {

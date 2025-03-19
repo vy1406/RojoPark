@@ -35,17 +35,20 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    this.authService.login(this.username?.value, this.password?.value).subscribe({
-      next: () => {
-        console.log('✅ Login successful. Redirecting...');
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        console.error('Login failed:', err);
-      }
-    });
+    if (this.loginForm.valid) {
+      this.authService.login(this.username?.value, this.password?.value).subscribe({
+        next: () => {
+          console.log('✅ Login successful. Redirecting...');
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error('❌ Login failed:', err);
+        }
+      });
+    } else {
+      console.error("❌ Form is invalid");
+    }
   }
-
 
   logout() {
     this.authService.logout();

@@ -8,6 +8,7 @@ import { PostFormComponent } from './pages/post-form/post-form.component';
 import { PrivateComponent } from './pages/private/private.component';
 import { authGuard } from './guards/auth.guard';
 import { ParkNewComponent } from './pages/park-new/park-new.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'parks/:id', component: ParkComponent },
   { path: 'parks/:id/form', component: PostFormComponent },
   { path: 'post/:id', component: PostComponent },
+  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'private', component: PrivateComponent, canActivate: [authGuard] },
   { path: 'park/new', component: ParkNewComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '' }
