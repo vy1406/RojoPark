@@ -6,7 +6,7 @@ import { Observable, of, switchMap, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class FileService {
-  private readonly apiUrl = 'https://pxe3n26y0c.execute-api.us-east-1.amazonaws.com/prod';
+  private readonly apiUrl = 'https://6vdl1qb46k.execute-api.us-east-1.amazonaws.com/prod';
 
   constructor(private http: HttpClient) { }
 

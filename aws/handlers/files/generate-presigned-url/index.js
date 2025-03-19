@@ -4,6 +4,14 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const s3 = new S3Client({ region: process.env.AWS_REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME;
 
+const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+};
+
+
 exports.handler = async (event) => {
     try {
         const body = JSON.parse(event.body);
@@ -12,15 +20,15 @@ exports.handler = async (event) => {
         if (!fileName || !fileType) {
             return {
                 statusCode: 400,
+                headers: { "Access-Control-Allow-Origin": "*" },
                 body: JSON.stringify({ error: "fileName and fileType are required" }),
             };
         }
 
         const params = {
             Bucket: BUCKET_NAME,
-            Key: `uploads/${fileName}`,
-            ContentType: fileType,
-            ACL: "private",
+            Key: `profiles/${fileName}`,
+            ContentType: fileType
         };
 
         const url = await getSignedUrl(s3, new PutObjectCommand(params), {
@@ -29,9 +37,18 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,PUT,POST,GET",
+                "Access-Control-Allow-Headers": "*"
+            },
             body: JSON.stringify({ uploadUrl: url }),
         };
     } catch (error) {
-        return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
+        return {
+            statusCode: 500,
+            headers: { "Access-Control-Allow-Origin": "*" },
+            body: JSON.stringify({ error: error.message })
+        };
     }
 }

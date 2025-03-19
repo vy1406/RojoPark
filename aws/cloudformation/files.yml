@@ -14,9 +14,46 @@ Resources:
       BucketName: "rojo-park-img-storage"
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
-        BlockPublicPolicy: true
+        BlockPublicPolicy: false 
         IgnorePublicAcls: true
-        RestrictPublicBuckets: true
+        RestrictPublicBuckets: false
+      CorsConfiguration: 
+        CorsRules:
+          - AllowedOrigins:
+              - "*" 
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+            AllowedHeaders:
+              - "*"
+            ExposedHeaders:
+              - ETag
+            MaxAge: 3000
+
+  RojoImageBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref RojoImageBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !GetAtt RojoS3LambdaExecutionRole.Arn
+            Action:
+              - s3:PutObject
+              - s3:GetObject
+              - s3:ListBucket
+            Resource:
+              - !Sub "arn:aws:s3:::${RojoImageBucket}"
+              - !Sub "arn:aws:s3:::${RojoImageBucket}/*"
+
+          - Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${RojoImageBucket}/*"
+
 
   RojoS3LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -42,6 +79,10 @@ Resources:
                 Resource:
                   - !Sub "arn:aws:s3:::${RojoImageBucket}"
                   - !Sub "arn:aws:s3:::${RojoImageBucket}/*"
+              - Effect: Allow  # ✅ Allow CloudFormation to modify policies
+                Action:
+                  - s3:PutBucketPolicy
+                Resource: !Sub "arn:aws:s3:::${RojoImageBucket}"
         - PolicyName: RojoCloudWatchLogsAccess
           PolicyDocument:
             Version: "2012-10-17"
@@ -81,6 +122,32 @@ Resources:
       PathPart: get-presigned-url
       RestApiId: !Ref RojoS3ApiGateway
 
+  RojoPresignedOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RojoS3ApiGateway
+      ResourceId: !Ref RojoPresignedUrlResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          "application/json": "{\"statusCode\": 200}"
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'*'"
+            ResponseTemplates:
+              "application/json": ""
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST,PUT'"
+            method.response.header.Access-Control-Allow-Headers: "'*'"
+
   RojoPresignedUrlMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -94,6 +161,10 @@ Resources:
         Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RojoGeneratePresignedUrlFunction.Arn}/invocations"
       MethodResponses:
         - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST,PUT'"
+            method.response.header.Access-Control-Allow-Headers: "'*'"
 
   RojoS3ApiDeployment:
     Type: AWS::ApiGateway::Deployment
