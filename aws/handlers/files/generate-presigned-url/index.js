@@ -4,14 +4,6 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const s3 = new S3Client({ region: process.env.AWS_REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME;
 
-const headers = {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-};
-
-
 exports.handler = async (event) => {
     try {
         const body = JSON.parse(event.body);
