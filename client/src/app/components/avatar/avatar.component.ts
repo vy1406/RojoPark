@@ -30,6 +30,7 @@ export class AvatarComponent {
   @Input() avatarSvg: string | null = null;
   @Input() avatarUrl: string | null = null;
   @Input() allowFileUpload: boolean = true;
+  isAvatarLoading: boolean = true;
   username: string | null = this.authService.getUsername();
 
   @Output() avatarUpdated = new EventEmitter<{ avatarSvg?: string; avatarUrl?: string }>();
@@ -37,10 +38,16 @@ export class AvatarComponent {
   selectedFile: File | null = null;
   isUploading: boolean = false;
 
+
   ngOnInit() {
-    if (!this.avatarUrl && !this.avatarSvg) {
-      this.generateAvatar();
+    if (!this.avatarUrl && !this.avatarSvg && this.username) {
+      this.avatarUrl = this.avatarService.getProfilePictureUrl(this.username);
+      this.avatarUpdated.emit({ avatarUrl: this.avatarUrl });
     }
+  }
+
+  onAvatarLoaded() {
+    this.isAvatarLoading = false;
   }
 
   generateAvatar() {
