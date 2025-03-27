@@ -14,7 +14,7 @@
     "file:deploy": "aws cloudformation deploy --template-file aws/cloudformation/files.yml --stack-name RojoParkFiles --capabilities CAPABILITY_NAMED_IAM",
     "file:output": "aws cloudformation describe-stacks --stack-name RojoParkFiles --query \"Stacks[0].Outputs\"",
 
-    "posts:uploadzip": "aws s3 cp aws/handlers/posts/new.zip s3://rojo-park-lambda-bucket/posts/new.zip"
+    "posts:uploadzip": "aws s3 cp aws/handlers/posts/delete.zip s3://rojo-park-lambda-bucket/posts/delete.zip"
   },
   "keywords": [],
   "author": "",

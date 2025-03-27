@@ -7,7 +7,7 @@ const BUCKET_NAME = process.env.BUCKET_NAME;
 exports.handler = async (event) => {
     try {
         const body = JSON.parse(event.body);
-        const { fileName, fileType } = body;
+        const { fileName, fileType, folderName = 'random' } = body;
 
         if (!fileName || !fileType) {
             return {
@@ -19,7 +19,7 @@ exports.handler = async (event) => {
 
         const params = {
             Bucket: BUCKET_NAME,
-            Key: `profiles/${fileName}`,
+            Key: `${folderName}/${fileName}`,
             ContentType: fileType
         };
 

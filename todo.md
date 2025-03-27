@@ -53,8 +53,5 @@ https://github.com/ralftar/ng-mat-carousel?tab=readme-ov-file
 - add multipart uppload.
 
 # upload posts
-- upload lambdas
 - upload template
-- update generate presigned url to pass folder to upload: Key: `profiles/${fileName}`
 - upload post and then upload files then update with PUT the dynamoDB
-- 
