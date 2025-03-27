@@ -47,20 +47,12 @@ https://github.com/ralftar/ng-mat-carousel?tab=readme-ov-file
 4. change the auth:uploadzip to the correct file
 5. npm run auth:uploadzip
 
-
-# did:
-- add user to user Table
-- create service to upload with pre-signed url. 
-- create a profile page where he can upload.
-- generate github profile type
-
 # continue:
 - save the first generated avatarSvg
 - fix profile, upload avatar or pic
 - add multipart uppload.
 
 # upload posts
-- add uuid to layer
 - upload lambdas
 - upload template
 - update generate presigned url to pass folder to upload: Key: `profiles/${fileName}`

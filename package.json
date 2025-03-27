@@ -12,7 +12,9 @@
 
     "file:uploadzip": "aws s3 cp aws/handlers/files/generate-presigned-url.zip s3://rojo-park-lambda-bucket/files/generate-presigned-url.zip",
     "file:deploy": "aws cloudformation deploy --template-file aws/cloudformation/files.yml --stack-name RojoParkFiles --capabilities CAPABILITY_NAMED_IAM",
-    "file:output": "aws cloudformation describe-stacks --stack-name RojoParkFiles --query \"Stacks[0].Outputs\""
+    "file:output": "aws cloudformation describe-stacks --stack-name RojoParkFiles --query \"Stacks[0].Outputs\"",
+
+    "posts:uploadzip": "aws s3 cp aws/handlers/posts/new.zip s3://rojo-park-lambda-bucket/posts/new.zip"
   },
   "keywords": [],
   "author": "",
