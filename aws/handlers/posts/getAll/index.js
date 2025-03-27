@@ -1,7 +1,6 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, ScanCommand } = require("@aws-sdk/lib-dynamodb");
 const jwt = require("jsonwebtoken");
-const { v4: uuidv4 } = require("uuid");
 
 const SECRET = process.env.JWT_SECRET || "mysecretkey3";
 const TABLE_NAME = process.env.TABLE_NAME || "RojoPostsTable";
@@ -9,7 +8,7 @@ const TABLE_NAME = process.env.TABLE_NAME || "RojoPostsTable";
 const HEADERS = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    'Access-Control-Allow-Methods': 'GET,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type,Authorization',
 };
 
@@ -41,49 +40,18 @@ exports.handler = async (event) => {
             };
         }
 
-        const body = JSON.parse(event.body);
-        const { title, content, moderator, park, dateCreated } = body;
-
-        if (!title || !content || !moderator || !park || !dateCreated) {
-            return {
-                statusCode: 400,
-                headers: HEADERS,
-                body: JSON.stringify({ message: "Missing required fields" }),
-            };
-        }
-
-        if (moderator.username !== decoded.username) {
-            return {
-                statusCode: 403,
-                headers: HEADERS,
-                body: JSON.stringify({ message: "Moderator mismatch with token user" }),
-            };
-        }
-
-        const postId = uuidv4();
-
-        const newPost = {
-            postId,
-            title,
-            content,
-            moderator,
-            park,
-            dateCreated,
-        };
-
-        await dynamoDB.send(new PutCommand({
+        const result = await dynamoDB.send(new ScanCommand({
             TableName: TABLE_NAME,
-            Item: newPost,
         }));
 
         return {
             statusCode: 200,
             headers: HEADERS,
-            body: JSON.stringify({ message: "Post created", postId }),
+            body: JSON.stringify(result.Items || []),
         };
 
     } catch (error) {
-        console.error("Error in createPost handler:", error);
+        console.error("Error in getAllPosts handler:", error);
         return {
             statusCode: 500,
             headers: HEADERS,
