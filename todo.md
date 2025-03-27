@@ -56,4 +56,7 @@ https://github.com/ralftar/ng-mat-carousel?tab=readme-ov-file
 
 # continue:
 - save the first generated avatarSvg
+- fix profile, upload avatar or pic
 - add multipart uppload.
+
+# upload posts
